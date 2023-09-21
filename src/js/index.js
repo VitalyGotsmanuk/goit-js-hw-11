@@ -4,6 +4,9 @@ import Notiflix, { Notify } from 'notiflix'; // Для відображення 
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
+//console.log(Notiflix);
+//console.log(SimpleLightbox);
+
 import {createMarkup, fetchPict} from '/src/js/function';
 
 const lightbox = new SimpleLightbox('.photo-card a', { 
