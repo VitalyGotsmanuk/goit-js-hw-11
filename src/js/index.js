@@ -40,20 +40,20 @@ async function handlerSearch(evt) {
     else {
 
     await fetchPict(searchQuery, perPage, page)
-    .then((response) => {
+    .then((allPict) => {
         // console.log(response.data);
         // console.log(response.data.hits);
         // console.log(response.data.totalHits);
                 
-        totalPages = Math.ceil(response.data.totalHits/perPage);    
+        totalPages = Math.ceil(allPict.totalHits/perPage);    
         // console.log(totalPages);  
         
-        if(response.data.totalHits === 0) {
+        if(allPict.totalHits === 0) {
             Notify.warning(`Sorry, there are no images matching your search query. Please try again.`);
         } else {
-            Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
+            Notify.success(`Hooray! We found ${allPict.totalHits} images.`);
     
-        element.list.insertAdjacentHTML(`beforeend`, createMarkup(response.data.hits));
+        element.list.insertAdjacentHTML(`beforeend`, createMarkup(allPict.hits));
         lightbox.refresh();
         
         if (page < totalPages){
@@ -69,7 +69,7 @@ async function handlerLoadMore(){
     // console.log(page)
     await fetchPict(searchQuery, perPage, page)
     .then((response) => {
-        element.list.insertAdjacentHTML(`beforeend`, createMarkup(response.data.hits));
+        element.list.insertAdjacentHTML(`beforeend`, createMarkup(allPict.hits));
         lightbox.refresh();
 
         if (page >= totalPages){

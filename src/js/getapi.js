@@ -16,8 +16,10 @@ async function fetchPict(searchQuery, perPage, page){
     });
    
     let response = await axios.get(`${urlApi}?${params}`);
+
+    const allPict = response.data;
    
-    return response;
+    return allPict;
 }
 
 export {fetchPict};
