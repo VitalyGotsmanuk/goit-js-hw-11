@@ -41,10 +41,7 @@ async function handlerSearch(evt) {
 
     await fetchPict(searchQuery, perPage, page)
     .then((allPict) => {
-        // console.log(response.data);
-        // console.log(response.data.hits);
-        // console.log(response.data.totalHits);
-                
+                        
         totalPages = Math.ceil(allPict.totalHits/perPage);    
         // console.log(totalPages);  
         
@@ -66,9 +63,8 @@ element.loadMore.addEventListener(`click`, handlerLoadMore);
 
 async function handlerLoadMore(){
     page +=1;
-    // console.log(page)
     await fetchPict(searchQuery, perPage, page)
-    .then((response) => {
+    .then((allPict) => {
         element.list.insertAdjacentHTML(`beforeend`, createMarkup(allPict.hits));
         lightbox.refresh();
 
