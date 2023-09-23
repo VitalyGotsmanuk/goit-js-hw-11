@@ -9,7 +9,7 @@ import {createMarkup} from '/src/js/cardsmaker';
 
 const lightbox = new SimpleLightbox('.photo-card a', { 
     captionsData: `alt`, 
-    captionDelay: 250,
+    captionDelay: 1500,
 }); 
 
 const element = {
@@ -26,27 +26,27 @@ let searchQuery = ``;
 
 element.search.addEventListener(`submit`, handlerSearch);
 
-function handlerSearch(evt) {
+async function handlerSearch(evt) {
     evt.preventDefault();
     element.loadMore.classList.replace(`load-more`, `load-more-hidden`);
     element.list.innerHTML = ``;
     page = 1;
     
     searchQuery = evt.currentTarget.elements.searchQuery.value;
-    console.log(searchQuery);
+    //console.log(searchQuery);
 
     if (searchQuery === ""){ 
         Notify.warning(`Attention! Field must be filled.`);} 
     else {
 
-    fetchPict(searchQuery, perPage, page)
+    await fetchPict(searchQuery, perPage, page)
     .then((response) => {
-        console.log(response.data);
-        console.log(response.data.hits);
-        console.log(response.data.totalHits);
+        // console.log(response.data);
+        // console.log(response.data.hits);
+        // console.log(response.data.totalHits);
                 
         totalPages = Math.ceil(response.data.totalHits/perPage);    
-        console.log(totalPages);  
+        // console.log(totalPages);  
         
         if(response.data.totalHits === 0) {
             Notify.warning(`Sorry, there are no images matching your search query. Please try again.`);
@@ -59,18 +59,15 @@ function handlerSearch(evt) {
         if (page < totalPages){
             element.loadMore.classList.replace(`load-more-hidden`, `load-more`)
         }}
-    })
-    .catch((_err) => {
-        element.loadMore.classList.replace("load-more", "load-more-hidden");
-    })};
+    })}
 };
 
 element.loadMore.addEventListener(`click`, handlerLoadMore);
 
-function handlerLoadMore(){
+async function handlerLoadMore(){
     page +=1;
-    console.log(page)
-    fetchPict(searchQuery, perPage, page)
+    // console.log(page)
+    await fetchPict(searchQuery, perPage, page)
     .then((response) => {
         element.list.insertAdjacentHTML(`beforeend`, createMarkup(response.data.hits));
         lightbox.refresh();
