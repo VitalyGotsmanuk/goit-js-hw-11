@@ -3,7 +3,6 @@ import axios from "axios";
 
 const urlApi = `https://pixabay.com/api/`;
 
-
 function fetchPict(searchQuery, perPage, page){
     const params = new URLSearchParams ({
         q: searchQuery,
@@ -15,9 +14,9 @@ function fetchPict(searchQuery, perPage, page){
         per_page: perPage,
     });
    
-    return response = axios.get(`${urlApi}?${params}`);
+    let response = axios.get(`${urlApi}?${params}`);
    
-    //return response.data;
+    return response;
 }
 
 export {fetchPict};
