@@ -27,24 +27,26 @@ let searchQuery = ``;
 element.search.addEventListener(`submit`, handlerSearch);
 
 async function handlerSearch(evt) {
+
     evt.preventDefault();
     element.loadMore.classList.replace(`load-more`, `load-more-hidden`);
     element.list.innerHTML = ``;
     page = 1;
+    console.log(page);
     
-    searchQuery = evt.currentTarget.elements.searchQuery.value;
-    //console.log(searchQuery);
-
+    searchQuery = evt.currentTarget.elements.searchQuery.value.trim();
+    console.log(searchQuery);
+    
     if (searchQuery === ""){ 
         Notify.warning(`Attention! Field must be filled.`);} 
     else {
 
-    await fetchPict(searchQuery, perPage, page)
-    .then((allPict) => {
-                        
-        totalPages = Math.ceil(allPict.totalHits/perPage);    
-        // console.log(totalPages);  
-        
+    try {
+        const allPict = await fetchPict(searchQuery, perPage, page);
+
+        totalPages = Math.ceil(allPict.totalHits/perPage);
+        console.log(totalPages);
+                
         if(allPict.totalHits === 0) {
             Notify.warning(`Sorry, there are no images matching your search query. Please try again.`);
         } else {
@@ -56,26 +58,32 @@ async function handlerSearch(evt) {
         if (page < totalPages){
             element.loadMore.classList.replace(`load-more-hidden`, `load-more`)
         }}
-    })}
-};
+    }
+    catch (error) {
+        console.log(error);
+    }
+}};
 
 element.loadMore.addEventListener(`click`, handlerLoadMore);
 
 async function handlerLoadMore(){
     page +=1;
-    await fetchPict(searchQuery, perPage, page)
-    .then((allPict) => {
-        element.list.insertAdjacentHTML(`beforeend`, createMarkup(allPict.hits));
-        lightbox.refresh();
+    console.log(page);
 
-        if (page >= totalPages){
-            Notify.info(`Sorry, there are no images matching your search query. Please try again.`);
-            element.loadMore.classList.replace(`load-more`, `load-more-hidden`);
-            }
-        else
-        {element.loadMore.classList.replace(`load-more-hidden`, `load-more`)}
-    })
-    .catch((_err) => {
+    try{
+    const allPict = await fetchPict(searchQuery, perPage, page);
+
+    element.list.insertAdjacentHTML(`beforeend`, createMarkup(allPict.hits));
+    lightbox.refresh();
+
+    if (page >= totalPages){
+        Notify.info(`Sorry, there are no images matching your search query. Please try again.`);
+        element.loadMore.classList.replace(`load-more`, `load-more-hidden`);
+        }
+    else {element.loadMore.classList.replace(`load-more-hidden`, `load-more`)}
+    }
+    catch (error) {
+        console.log(error);
         element.loadMore.classList.replace("load-more", "load-more-hidden");
-    })
+    }
 }
